@@ -1,0 +1,60 @@
+version: '2.1'
+services:
+  haproxy:
+    container_name: lb
+    build: ./haproxy
+    ports:
+     - 80:6301
+    logging:
+      driver: json-file
+      options:
+        max-size: 500m
+        max-file: '2'
+    restart: always
+    links:
+    - ping-app1
+    - ping-app2
+
+  ping-app1:
+    container_name: app1
+    build: ..
+    ports:
+     - 8001:8000
+    logging:
+      driver: json-file
+      options:
+        max-size: 500m
+        max-file: '2'
+    restart: always
+    volumes:
+    - ../app:/usr/src/app
+    links:
+    - redis
+
+  ping-app2:
+    container_name: app2
+    build: ..
+    ports:
+     - 8002:8000
+    logging:
+      driver: json-file
+      options:
+        max-size: 500m
+        max-file: '2'
+    restart: always
+    volumes:
+    - ../app:/usr/src/app
+    links:
+    - redis
+
+  redis:
+    container_name: db
+    image: redis:latest
+    ports:
+     - 6379:6379
+    logging:
+      driver: json-file
+      options:
+        max-size: 500m
+        max-file: '2'
+    restart: always
