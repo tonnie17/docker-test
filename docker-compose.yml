@@ -1,0 +1,56 @@
+version: '2.1'
+services:
+  haproxy:
+    container_name: lb
+    build: ./builds/haproxy
+    ports:
+     - 80:6301
+    restart: always
+    links:
+    - ping-app1
+    - ping-app2
+
+  ping-app1:
+    container_name: app1
+    build: .
+    ports:
+     - 8001:8000
+    restart: always
+    volumes:
+    - ./app:/usr/src/app
+    links:
+    - sentinel
+    - redis-master:db
+
+  ping-app2:
+    container_name: app2
+    build: .
+    ports:
+     - 8002:8000
+    restart: always
+    volumes:
+    - ./app:/usr/src/app
+    links:
+    - sentinel
+    - redis-master:db
+
+  redis-master:
+    container_name: redis-master
+    image: redis:latest
+    ports:
+     - 6379:6379
+    restart: always
+
+  redis-slave:
+    image: redis:latest
+    command: redis-server --slaveof master 6379
+    restart: always
+    links:
+    - redis-master:master
+ 
+  sentinel:
+    build: ./builds/sentinel
+    restart: always
+    links:
+    - redis-master:redis-master
+    - redis-slave
