@@ -9,6 +9,7 @@ services:
     links:
     - ping-app1
     - ping-app2
+    - etcd:etcd
 
   ping-app1:
     container_name: app1
@@ -54,3 +55,17 @@ services:
     links:
     - redis-master:redis-master
     - redis-slave
+
+  etcd:
+    image: elcolio/etcd
+    command: -name etcd -initial-cluster-token=etcd-cluster-1 -initial-cluster="etcd=http://etcd:2380" -initial-cluster-state=new -advertise-client-urls=http://etcd:2379 -initial-advertise-peer-urls http://etcd:2380
+    environment:
+     - CLIENT_URLS=http://0.0.0.0:2379
+     - PEER_URLS=http://0.0.0.0:2380
+    ports:
+     - 2379:2379
+     - 2380:2380
+     - 4001:4001
+     - 7001:7001
+    volumes:
+     - /etc/ssl/certs/:/etc/ssl/certs/
