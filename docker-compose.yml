@@ -7,27 +7,11 @@ services:
      - 80:6301
     restart: always
     links:
-    - ping-app1
-    - ping-app2
+    - ping-app
     - etcd:etcd
 
-  ping-app1:
-    container_name: app1
+  ping-app:
     build: .
-    ports:
-     - 8001:8000
-    restart: always
-    volumes:
-    - ./app:/usr/src/app
-    links:
-    - sentinel
-    - redis-master:db
-
-  ping-app2:
-    container_name: app2
-    build: .
-    ports:
-     - 8002:8000
     restart: always
     volumes:
     - ./app:/usr/src/app

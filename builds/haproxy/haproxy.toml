@@ -6,4 +6,4 @@ keys = [
 ]
 owner = "root"
 mode = "0644"
-reload_cmd = "/usr/local/sbin/haproxy reload"
+reload_cmd = "kill -HUP 1"
