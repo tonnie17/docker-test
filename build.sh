@@ -11,6 +11,6 @@ APP_SERVER_PORT=8000
 INDEX=1
 for ETCD_NODE in ${APP_SERVERS//\s/};
 do
-    docker-compose -f docker-compose.yml exec etcd etcdctl set /app/servers/s$INDEX $ETCD_NODE:$APP_SERVER_PORT
+    docker-compose -f docker-compose.yml exec etcd etcdctl set /app/servers/app$INDEX $ETCD_NODE:$APP_SERVER_PORT
     INDEX=$(expr $INDEX + 1)
 done

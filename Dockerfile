@@ -10,9 +10,9 @@ RUN apt-get update && \
     apt-get install -y supervisor && \
     rm -rf /var/lib/apt/lists/*
 
-RUN cd /usr/src/app && \
-    pip install meinheld && \
+RUN pip install meinheld && \
     pip install gunicorn && \
+    cd /usr/src/app && \
     pip install -r requirement.txt && \
     python manage.py makemigrations && \
     python manage.py migrate
